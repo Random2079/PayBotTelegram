@@ -1,14 +1,17 @@
 from aiogram.types import Message, ShippingOption, ShippingQuery, LabeledPrice, PreCheckoutQuery
 from aiogram.types.message import ContentType
+from aiogram import types 
 
 from messages import MESSAGES
 from config import PAYMENTS_TOKEN, item_url
 from main import dp, bot
 
-
-PRICES = [
+########### Цены и виды доставок 
+PRICE_MICRO = [
     LabeledPrice(label='Ремонт микроволновок', amount=1000),
-    LabeledPrice(label='Вызов и диагностика', amount=500)
+]
+PRICE_DIAGNOSTIC = [
+    LabeledPrice(label='Вызов и диагностика микроволновки', amount=500)
 ]
 
 DELIVERY_SHIPPING_OPTION = ShippingOption(
@@ -30,11 +33,24 @@ PICKUP_SHIPPING_OPTION = ShippingOption(
 )
 PICKUP_SHIPPING_OPTION.add(LabeledPrice('Самовывоз в Сантк-Петербурге', 1000))
 
+###################
+
+# Кнопки и Keyboard
+
+Service = types.KeyboardButton('Услуги')
+Company = types.KeyboardButton('О компании')
+Support = types.KeyboardButton('Поддрежка')
+
+menu = types.ReplyKeyboardMarkup(resize_keyboard = True, row_width = 3 )
+menu.add(Service,Company,Support)
+
+###################
+
 @dp.message_handler(commands=['start'])
 async def start_cmd(message: Message):
-    await message.answer(MESSAGES['start'])
+    await message.answer(MESSAGES['start'],reply_markup = menu)
 
-@dp.message_handler(commands=['help'])
+@dp.message_handler(content_types=["text"])
 async def help_cmd(message: Message):
     await message.answer(MESSAGES['help'])
 
@@ -56,7 +72,7 @@ async def buy_process(message: Message):
                            need_email=True,
                            need_phone_number=True,
                            is_flexible=True,
-                           prices=PRICES,
+                           prices=PRICE_MICRO,
                            start_parameter='example',
                            payload='some_invoice')
 
