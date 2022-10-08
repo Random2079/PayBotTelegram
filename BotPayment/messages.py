@@ -3,7 +3,8 @@ help_message = '''
 Узнать правила можно воспользовавшись командой /terms.
 '''
 
-start_message = 'Привет! Сейчас ты увидишь работу платежей в Telegram!\n' + help_message
+start_message = '''
+Здравствуйте! Вас приветствует компания "MicroWife"''' + help_message
 
 terms = '''\
 Правила!
